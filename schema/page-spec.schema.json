@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ds-spec/page-spec.schema.json",
+  "title": "PageSpec",
+  "description": "Спецификация страницы для renderer. Генерируется LLM по правилам из rules/.",
+  "type": "object",
+  "required": ["version", "page", "imports", "tree"],
+  "properties": {
+
+    "version": { "type": "string", "const": "1" },
+
+    "page": {
+      "type": "object",
+      "required": ["id", "route", "file"],
+      "properties": {
+        "id":    { "type": "string", "description": "Идентификатор страницы (camelCase)" },
+        "route": { "type": "string", "description": "URL маршрут, например /agents" },
+        "file":  { "type": "string", "description": "Путь к выходному файлу, например src/pages/Agents.tsx" },
+        "title": { "type": "string", "description": "Человекочитаемый заголовок страницы" }
+      }
+    },
+
+    "imports": {
+      "type": "array",
+      "description": "Список импортов для вставки в начало файла",
+      "items": { "type": "string" }
+    },
+
+    "state": {
+      "type": "array",
+      "description": "React state переменные",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "initial"],
+        "properties": {
+          "name":    { "type": "string" },
+          "type":    { "type": "string" },
+          "initial": { "type": "string" },
+          "setter":  { "type": "string" }
+        }
+      }
+    },
+
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      }
+    },
+
+    "derived": {
+      "type": "array",
+      "description": "useMemo-производные",
+      "items": {
+        "type": "object",
+        "required": ["name", "deps", "logic"],
+        "properties": {
+          "name":  { "type": "string" },
+          "deps":  { "type": "array", "items": { "type": "string" } },
+          "logic": { "type": "string" }
+        }
+      }
+    },
+
+    "tree": {
+      "$ref": "#/definitions/Node",
+      "description": "Корневой узел дерева компонентов"
+    },
+
+    "data": {
+      "type": "object",
+      "description": "Статические данные: options-массивы, константы и т.д.",
+      "additionalProperties": true
+    }
+  },
+
+  "definitions": {
+
+    "Node": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Тип узла",
+          "enum": ["component", "element", "text", "fragment", "conditional", "list"]
+        },
+        "component":  { "type": "string", "description": "Имя React-компонента (для type=component)" },
+        "element":    { "type": "string", "description": "HTML-тег (для type=element)" },
+        "className":  { "type": "string" },
+        "style":      { "type": "object", "additionalProperties": true },
+        "props":      { "type": "object", "additionalProperties": true },
+        "text":       { "type": "string", "description": "Текст (для type=text)" },
+        "children":   { "type": "array", "items": { "$ref": "#/definitions/Node" } },
+        "condition":  { "type": "string", "description": "JS-выражение для type=conditional" },
+        "iterateOver":{ "type": "string", "description": "Имя массива для type=list" },
+        "itemVar":    { "type": "string", "description": "Имя переменной элемента для type=list" },
+        "keyField":   { "type": "string", "description": "Поле ключа для type=list" },
+        "_comment":   { "type": "string", "description": "Комментарий для LLM / разработчика" }
+      }
+    }
+
+  }
+}

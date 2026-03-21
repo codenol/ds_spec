@@ -1,0 +1,228 @@
+{
+  "version": "1",
+  "page": {
+    "id": "agents",
+    "route": "/agents",
+    "file": "src/pages/Agents.tsx",
+    "title": "Агенты"
+  },
+  "imports": [
+    "import React, { useState, useMemo, useRef } from 'react';",
+    "import { Button } from 'primereact/button';",
+    "import { InputText } from 'primereact/inputtext';",
+    "import { Dropdown } from 'primereact/dropdown';",
+    "import { DataTable } from 'primereact/datatable';",
+    "import { Column } from 'primereact/column';",
+    "import { Menu } from 'primereact/menu';",
+    "import { StatusBadge } from 'uikit/StatusBadge/StatusBadge';",
+    "import { AppLayout } from '../layout/AppLayout';"
+  ],
+  "state": [
+    { "name": "searchQuery",  "type": "string",      "initial": "''",   "setter": "setSearchQuery" },
+    { "name": "statusFilter", "type": "string",      "initial": "''",   "setter": "setStatusFilter" },
+    { "name": "agents",       "type": "AgentRow[]",  "initial": "MOCK_AGENTS", "setter": "setAgents" },
+    { "name": "selection",    "type": "AgentRow[]",  "initial": "[]",   "setter": "setSelection" },
+    { "name": "menuRow",      "type": "AgentRow | null", "initial": "null", "setter": "setMenuRow" }
+  ],
+  "refs": [
+    { "name": "rowMenuRef", "type": "Menu" }
+  ],
+  "derived": [
+    {
+      "name": "filteredAgents",
+      "deps": ["agents", "searchQuery", "statusFilter"],
+      "logic": "agents.filter(a => (!searchQuery || a.name.toLowerCase().includes(searchQuery.toLowerCase())) && (!statusFilter || a.statusCode === statusFilter))"
+    }
+  ],
+  "data": {
+    "STATUS_OPTIONS": [
+      { "label": "Все статусы", "value": "" },
+      { "label": "Активен",     "value": "success" },
+      { "label": "Предупреждение", "value": "warning" },
+      { "label": "Критично",    "value": "critical" },
+      { "label": "Остановлен",  "value": "stop" }
+    ],
+    "MOCK_AGENTS": [
+      { "id": "1", "name": "agent-prod-01", "type": "monitor", "host": "10.0.0.1", "version": "2.4.1", "statusCode": "success", "statusName": "Активен",    "lastSeen": "2026-03-21" },
+      { "id": "2", "name": "agent-prod-02", "type": "backup",  "host": "10.0.0.2", "version": "2.4.0", "statusCode": "warning", "statusName": "Нагрузка",   "lastSeen": "2026-03-21" },
+      { "id": "3", "name": "agent-dev-01",  "type": "monitor", "host": "10.0.1.1", "version": "2.5.0", "statusCode": "load",    "statusName": "Обновление", "lastSeen": "2026-03-21" },
+      { "id": "4", "name": "agent-stg-01",  "type": "deploy",  "host": "10.0.2.1", "version": "2.3.9", "statusCode": "stop",    "statusName": "Остановлен", "lastSeen": "2026-03-20" }
+    ]
+  },
+  "tree": {
+    "type": "component",
+    "component": "AppLayout",
+    "props": {
+      "breadcrumbTrail": "{[{ label: 'Агенты' }]}"
+    },
+    "children": [
+      {
+        "_comment": "Toolbar",
+        "type": "element",
+        "element": "div",
+        "className": "flex flex-wrap align-items-center gap-2 mb-3",
+        "children": [
+          {
+            "type": "component",
+            "component": "InputText",
+            "props": {
+              "placeholder": "Поиск по имени",
+              "value": "{searchQuery}",
+              "onChange": "{(e) => setSearchQuery(e.target.value)}",
+              "className": "p-inputtext-sm"
+            }
+          },
+          {
+            "type": "component",
+            "component": "Dropdown",
+            "props": {
+              "value": "{statusFilter}",
+              "options": "{STATUS_OPTIONS}",
+              "onChange": "{(e) => setStatusFilter(e.value)}",
+              "optionLabel": "label",
+              "placeholder": "Статус",
+              "className": "p-inputtext-sm",
+              "style": { "width": "12rem" }
+            }
+          },
+          {
+            "type": "component",
+            "component": "Button",
+            "props": {
+              "label": "Добавить агента",
+              "className": "p-button-pr",
+              "size": "small"
+            }
+          },
+          {
+            "type": "component",
+            "component": "Button",
+            "props": {
+              "label": "Экспорт",
+              "className": "p-button-outlined",
+              "size": "small",
+              "icon": "pi pi-download"
+            }
+          },
+          {
+            "type": "component",
+            "component": "Button",
+            "props": {
+              "icon": "pi pi-cog",
+              "className": "p-button-rounded p-button-outlined",
+              "size": "small",
+              "aria-label": "Настройки таблицы"
+            }
+          }
+        ]
+      },
+      {
+        "_comment": "Table card",
+        "type": "element",
+        "element": "div",
+        "className": "card",
+        "style": { "minWidth": 0, "overflow": "auto", "padding": 0 },
+        "children": [
+          {
+            "type": "component",
+            "component": "DataTable",
+            "props": {
+              "value": "{filteredAgents}",
+              "selection": "{selection}",
+              "onSelectionChange": "{(e) => setSelection(Array.isArray(e.value) ? e.value : [])}",
+              "dataKey": "id",
+              "sortMode": "single",
+              "removableSort": true,
+              "size": "small",
+              "stripedRows": true,
+              "selectionMode": "multiple",
+              "rowClassName": "{() => 'cursor-pointer'}"
+            },
+            "children": [
+              {
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "selectionMode": "multiple",
+                  "headerStyle": "{{ width: '3rem' }}"
+                }
+              },
+              {
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "field": "name",
+                  "header": "Имя агента",
+                  "sortable": true
+                }
+              },
+              {
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "field": "type",
+                  "header": "Тип",
+                  "sortable": true
+                }
+              },
+              {
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "field": "host",
+                  "header": "Хост",
+                  "sortable": true
+                }
+              },
+              {
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "field": "version",
+                  "header": "Версия"
+                }
+              },
+              {
+                "_comment": "Status column — uses StatusBadge body template",
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "header": "Статус",
+                  "body": "{(row) => <StatusBadge code={row.statusCode} name={row.statusName} />}"
+                }
+              },
+              {
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "field": "lastSeen",
+                  "header": "Последняя активность",
+                  "sortable": true
+                }
+              },
+              {
+                "_comment": "Row actions kebab menu",
+                "type": "component",
+                "component": "Column",
+                "props": {
+                  "headerStyle": "{{ width: '3rem' }}",
+                  "body": "{(row) => <Button icon='pi pi-ellipsis-v' className='p-button-text p-button-rounded' onClick={(e) => { setMenuRow(row); rowMenuRef.current?.toggle(e); }} />}"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "_comment": "Popup row menu",
+        "type": "component",
+        "component": "Menu",
+        "props": {
+          "model": "{[{ label: 'Открыть', icon: 'pi pi-eye' }, { label: 'Редактировать', icon: 'pi pi-pencil' }, { separator: true }, { label: 'Удалить', icon: 'pi pi-trash' }]}",
+          "popup": true,
+          "ref": "{rowMenuRef}"
+        }
+      }
+    ]
+  }
+}

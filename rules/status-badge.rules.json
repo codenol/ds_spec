@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "StatusBadge/Badge",
+      "component": "StatusBadge",
+      "importPath": "uikit/StatusBadge/StatusBadge",
+      "props": {
+        "severity": { "mapTo": "code" },
+        "label":    { "mapTo": "name" }
+      },
+      "variants": {
+        "Size=32":    { "size": 32 },
+        "Size=24":    { "size": 24 },
+        "Small=true": { "isSmall": true }
+      },
+      "severityMapping": {
+        "success":     "success",
+        "warning":     "warning",
+        "degradation": "degradation",
+        "critical":    "critical",
+        "info":        "info",
+        "maintenance": "maintenance",
+        "additional":  "additional",
+        "stop":        "stop",
+        "new":         "new",
+        "load":        "load"
+      }
+    }
+  ]
+}

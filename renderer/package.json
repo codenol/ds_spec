@@ -1,0 +1,19 @@
+{
+  "name": "ds-spec-renderer",
+  "version": "1.0.0",
+  "description": "Renderer: page-spec.json → .tsx files",
+  "main": "src/index.js",
+  "bin": {
+    "ds-render": "src/index.js"
+  },
+  "scripts": {
+    "render":   "node src/index.js",
+    "validate": "node src/index.js --validate"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

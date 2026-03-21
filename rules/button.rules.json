@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Button/Button",
+      "component": "Button",
+      "importPath": "primereact/button",
+      "props": {
+        "label": { "mapTo": "label" },
+        "icon":  { "mapTo": "icon", "optional": true }
+      },
+      "variants": {
+        "Type=filled,Sentiment=primary":   { "className": "p-button-pr" },
+        "Type=filled,Sentiment=secondary": { "className": "p-button-secondary" },
+        "Type=filled,Sentiment=success":   { "className": "p-button-success" },
+        "Type=filled,Sentiment=warning":   { "className": "p-button-warning" },
+        "Type=filled,Sentiment=danger":    { "className": "p-button-danger" },
+        "Type=outlined,Sentiment=primary": { "className": "p-button-outlined" },
+        "Type=outlined,Sentiment=danger":  { "className": "p-button-danger p-button-outlined" },
+        "Type=text":                       { "className": "p-button-text" },
+        "Size=large": { "size": null },
+        "Size=small": { "size": "small" }
+      }
+    }
+  ]
+}

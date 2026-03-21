@@ -1,0 +1,51 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Input/Text",
+      "component": "InputText",
+      "importPath": "primereact/inputtext",
+      "props": {
+        "placeholder": { "mapTo": "placeholder", "optional": true },
+        "value":       { "mapTo": "value", "bindState": true },
+        "disabled":    { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Size=large": {},
+        "Size=small": { "className": "p-inputtext-sm" },
+        "State=error":   { "className": "p-invalid" },
+        "State=warning": { "className": "p-warning" },
+        "State=disabled":{ "disabled": true },
+        "Icon=left":  { "wrapWith": "p-input-icon-left" },
+        "Icon=right": { "wrapWith": "p-input-icon-right" }
+      }
+    },
+    {
+      "figmaName": "Input/Dropdown",
+      "component": "Dropdown",
+      "importPath": "primereact/dropdown",
+      "props": {
+        "placeholder":  { "mapTo": "placeholder", "optional": true },
+        "value":        { "mapTo": "value", "bindState": true },
+        "options":      { "mapTo": "options", "bindState": true },
+        "optionLabel":  { "mapTo": "optionLabel", "default": "label" }
+      },
+      "variants": {
+        "Size=small": { "className": "p-inputtext-sm" },
+        "State=disabled": { "disabled": true }
+      }
+    },
+    {
+      "figmaName": "Input/Switch",
+      "component": "InputSwitch",
+      "importPath": "primereact/inputswitch",
+      "props": {
+        "checked":  { "mapTo": "checked", "bindState": true },
+        "disabled": { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "State=disabled": { "disabled": true }
+      }
+    }
+  ]
+}

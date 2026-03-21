@@ -1,0 +1,42 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "DataTable/Table",
+      "component": "DataTable",
+      "importPath": "primereact/datatable",
+      "props": {
+        "value":     { "mapTo": "value", "bindState": true },
+        "dataKey":   { "mapTo": "dataKey", "default": "id" },
+        "selection": { "mapTo": "selection", "bindState": true, "optional": true }
+      },
+      "variants": {
+        "Size=small":      { "size": "small" },
+        "Striped=true":    { "stripedRows": true },
+        "Selectable=true": { "selectionMode": "multiple", "onSelectionChange": "bindHandler" },
+        "Clickable=true":  { "onRowClick": "bindHandler", "rowClassName": "() => 'cursor-pointer'" },
+        "Sortable=true":   { "sortMode": "single", "removableSort": true }
+      },
+      "columns": {
+        "selection": {
+          "component": "Column",
+          "props": { "selectionMode": "multiple", "headerStyle": { "width": "3rem" } }
+        },
+        "text": {
+          "component": "Column",
+          "props": { "field": "bindField", "header": "bindHeader", "sortable": "optional" }
+        },
+        "status": {
+          "component": "Column",
+          "props": { "header": "bindHeader" },
+          "bodyTemplate": "<StatusBadge code={row.{statusCodeField}} name={row.{statusNameField}} />"
+        },
+        "actions": {
+          "component": "Column",
+          "props": { "headerStyle": { "width": "3rem" } },
+          "bodyTemplate": "<Button icon='pi pi-ellipsis-v' className='p-button-text p-button-rounded' onClick={(e) => { setMenuRow(row); rowMenuRef.current?.toggle(e); }} />"
+        }
+      }
+    }
+  ]
+}

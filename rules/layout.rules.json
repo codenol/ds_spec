@@ -1,0 +1,52 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Layout/PageShell",
+      "component": "AppLayout",
+      "importPath": "../layout/AppLayout",
+      "props": {
+        "breadcrumbTrail": { "mapTo": "breadcrumbTrail", "type": "breadcrumb[]" }
+      },
+      "variants": {},
+      "childSlots": {
+        "default": "children"
+      }
+    },
+    {
+      "figmaName": "Layout/Card",
+      "element": "div",
+      "className": "card",
+      "variants": {
+        "Padding=none": { "style": { "padding": 0 } },
+        "Overflow=auto": { "style": { "overflow": "auto", "minWidth": 0 } }
+      }
+    },
+    {
+      "figmaName": "Layout/Toolbar",
+      "element": "div",
+      "className": "flex flex-wrap align-items-center gap-2 mb-3",
+      "childSlots": { "default": "children" }
+    },
+    {
+      "figmaName": "Layout/Stack/Horizontal",
+      "element": "div",
+      "className": "flex align-items-center",
+      "variants": {
+        "Gap=2": { "className": "flex align-items-center gap-2" },
+        "Gap=3": { "className": "flex align-items-center gap-3" },
+        "Gap=4": { "className": "flex align-items-center gap-4" },
+        "Wrap=true": { "className": "flex flex-wrap align-items-center gap-2" }
+      }
+    },
+    {
+      "figmaName": "Layout/Stack/Vertical",
+      "element": "div",
+      "className": "flex flex-column",
+      "variants": {
+        "Gap=2": { "className": "flex flex-column gap-2" },
+        "Gap=3": { "className": "flex flex-column gap-3" }
+      }
+    }
+  ]
+}
