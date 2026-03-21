@@ -1,0 +1,35 @@
+name: Validate rules & examples
+
+on:
+  push:
+    paths:
+      - 'rules/**'
+      - 'examples/**'
+      - 'schema/**'
+      - 'renderer/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: renderer/package.json
+
+      - name: Install renderer deps
+        run: cd renderer && npm install
+
+      - name: Validate examples
+        run: |
+          for f in examples/*.json; do
+            echo "Validating $f..."
+            node renderer/src/index.js --validate "$f"
+          done
+
+      - name: Rebuild rules-bundle
+        run: node scripts/build-rules-bundle.js
