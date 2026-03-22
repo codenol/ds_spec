@@ -1,0 +1,132 @@
+{
+  "version": "1",
+  "page": {
+    "id": "dashboard",
+    "route": "/dashboard",
+    "file": "src/pages/Dashboard.tsx",
+    "title": "Дашборд"
+  },
+  "imports": [
+    "import React from 'react';",
+    "import { Button } from 'primereact/button';",
+    "import { Message } from 'primereact/message';",
+    "import { ProgressBar } from 'primereact/progressbar';",
+    "import { AppLayout } from '../layout/AppLayout';",
+    "import { StatusBadge } from 'uikit/StatusBadge/StatusBadge';"
+  ],
+  "state": [
+    { "name": "stats",   "type": "DashboardStats | null", "initial": "null",  "setter": "setStats" },
+    { "name": "loading", "type": "boolean",               "initial": "true",  "setter": "setLoading" },
+    { "name": "error",   "type": "string | null",         "initial": "null",  "setter": "setError" }
+  ],
+  "callbacks": [
+    {
+      "name": "loadStats",
+      "params": "",
+      "deps": [],
+      "body": "setLoading(true);\n    fetch('/api/dashboard/stats')\n      .then(r => r.json())\n      .then(data => { setStats(data); setError(null); })\n      .catch(() => setError('Не удалось загрузить статистику'))\n      .finally(() => setLoading(false));"
+    }
+  ],
+  "effects": [
+    {
+      "deps": [],
+      "body": "loadStats();",
+      "cleanup": ""
+    }
+  ],
+  "data": {
+    "CARDS": [
+      { "id": "agents",  "label": "Агентов онлайн",    "stateKey": "agentsOnline",  "icon": "pi pi-server",      "color": "#22c55e" },
+      { "id": "tasks",   "label": "Задач за сегодня",  "stateKey": "tasksToday",    "icon": "pi pi-calendar",    "color": "#3b82f6" },
+      { "id": "alerts",  "label": "Активных алертов",  "stateKey": "activeAlerts",  "icon": "pi pi-exclamation-triangle", "color": "#f59e0b" },
+      { "id": "errors",  "label": "Ошибок за час",     "stateKey": "errorsLastHour","icon": "pi pi-times-circle","color": "#ef4444" }
+    ]
+  },
+  "tree": {
+    "type": "component",
+    "component": "AppLayout",
+    "props": { "breadcrumbTrail": "{[{ label: 'Дашборд' }]}" },
+    "children": [
+      {
+        "_comment": "Error banner",
+        "type": "conditional",
+        "condition": "error",
+        "component": "Message",
+        "props": {
+          "severity": "error",
+          "text": "{error}",
+          "className": "mb-3 w-full"
+        }
+      },
+      {
+        "_comment": "Stat cards row",
+        "type": "element",
+        "element": "div",
+        "className": "grid",
+        "children": [
+          {
+            "type": "list",
+            "iterateOver": "CARDS",
+            "itemVar": "card",
+            "keyField": "id",
+            "element": "div",
+            "className": "col-12 md:col-6 xl:col-3",
+            "children": [
+              {
+                "type": "element",
+                "element": "div",
+                "className": "card flex align-items-center gap-3 p-3",
+                "children": [
+                  {
+                    "type": "element",
+                    "element": "i",
+                    "className": "{`${card.icon} text-2xl`}",
+                    "props": { "style": "{({ color: card.color })}" }
+                  },
+                  {
+                    "type": "element",
+                    "element": "div",
+                    "children": [
+                      {
+                        "type": "element",
+                        "element": "div",
+                        "className": "text-500 text-sm",
+                        "body": "{card.label}"
+                      },
+                      {
+                        "type": "element",
+                        "element": "div",
+                        "className": "text-900 font-bold text-xl",
+                        "body": "{loading ? '…' : stats?.[card.stateKey] ?? '–'}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "_comment": "Refresh button",
+        "type": "element",
+        "element": "div",
+        "className": "flex justify-content-end mt-3",
+        "children": [
+          {
+            "type": "component",
+            "component": "Button",
+            "props": {
+              "label": "Обновить",
+              "icon": "pi pi-refresh",
+              "onClick": "{loadStats}",
+              "loading": "{loading}",
+              "className": "p-button-outlined",
+              "size": "small"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

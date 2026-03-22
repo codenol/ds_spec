@@ -1,0 +1,203 @@
+{
+  "version": "1",
+  "page": {
+    "id": "settings",
+    "route": "/settings",
+    "file": "src/pages/Settings.tsx",
+    "title": "Настройки"
+  },
+  "imports": [
+    "import React from 'react';",
+    "import { Button } from 'primereact/button';",
+    "import { InputText } from 'primereact/inputtext';",
+    "import { Dropdown } from 'primereact/dropdown';",
+    "import { Dialog } from 'primereact/dialog';",
+    "import { TabView, TabPanel } from 'primereact/tabview';",
+    "import { AppLayout } from '../layout/AppLayout';"
+  ],
+  "state": [
+    { "name": "activeTab",      "type": "number",          "initial": "0",     "setter": "setActiveTab" },
+    { "name": "confirmVisible", "type": "boolean",         "initial": "false", "setter": "setConfirmVisible" },
+    { "name": "locale",         "type": "string",          "initial": "'ru'",  "setter": "setLocale" },
+    { "name": "timezone",       "type": "string",          "initial": "'UTC'", "setter": "setTimezone" },
+    { "name": "apiKey",         "type": "string",          "initial": "''",    "setter": "setApiKey" },
+    { "name": "dirty",          "type": "boolean",         "initial": "false", "setter": "setDirty" }
+  ],
+  "callbacks": [
+    {
+      "name": "handleSave",
+      "params": "",
+      "deps": ["locale", "timezone", "apiKey"],
+      "body": "// persist settings\n    fetch('/api/settings', { method: 'POST', body: JSON.stringify({ locale, timezone, apiKey }) })\n      .then(() => setDirty(false));"
+    },
+    {
+      "name": "handleReset",
+      "params": "",
+      "deps": [],
+      "body": "setLocale('ru'); setTimezone('UTC'); setApiKey(''); setDirty(false); setConfirmVisible(false);"
+    }
+  ],
+  "data": {
+    "LOCALE_OPTIONS": [
+      { "label": "Русский",  "value": "ru" },
+      { "label": "English",  "value": "en" }
+    ],
+    "TZ_OPTIONS": [
+      { "label": "UTC",        "value": "UTC" },
+      { "label": "Europe/Moscow", "value": "Europe/Moscow" },
+      { "label": "Asia/Novosibirsk", "value": "Asia/Novosibirsk" }
+    ]
+  },
+  "tree": {
+    "type": "component",
+    "component": "AppLayout",
+    "props": { "breadcrumbTrail": "{[{ label: 'Настройки' }]}" },
+    "children": [
+      {
+        "type": "component",
+        "component": "TabView",
+        "props": {
+          "activeIndex": "{activeTab}",
+          "onTabChange": "{(e) => setActiveTab(e.index)}"
+        },
+        "children": [
+          {
+            "_comment": "Tab: General",
+            "type": "component",
+            "component": "TabPanel",
+            "props": { "header": "Общие" },
+            "children": [
+              {
+                "type": "element",
+                "element": "div",
+                "className": "flex flex-column gap-3 p-3",
+                "children": [
+                  {
+                    "type": "element",
+                    "element": "div",
+                    "className": "flex flex-column gap-1",
+                    "children": [
+                      { "type": "element", "element": "label", "body": "Язык интерфейса" },
+                      {
+                        "type": "component",
+                        "component": "Dropdown",
+                        "props": {
+                          "value": "{locale}",
+                          "options": "{LOCALE_OPTIONS}",
+                          "onChange": "{(e) => { setLocale(e.value); setDirty(true); }}",
+                          "optionLabel": "label",
+                          "style": "{({ width: '16rem' })}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "element",
+                    "element": "div",
+                    "className": "flex flex-column gap-1",
+                    "children": [
+                      { "type": "element", "element": "label", "body": "Часовой пояс" },
+                      {
+                        "type": "component",
+                        "component": "Dropdown",
+                        "props": {
+                          "value": "{timezone}",
+                          "options": "{TZ_OPTIONS}",
+                          "onChange": "{(e) => { setTimezone(e.value); setDirty(true); }}",
+                          "optionLabel": "label",
+                          "style": "{({ width: '16rem' })}"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "_comment": "Tab: API",
+            "type": "component",
+            "component": "TabPanel",
+            "props": { "header": "API" },
+            "children": [
+              {
+                "type": "element",
+                "element": "div",
+                "className": "flex flex-column gap-3 p-3",
+                "children": [
+                  {
+                    "type": "element",
+                    "element": "div",
+                    "className": "flex flex-column gap-1",
+                    "children": [
+                      { "type": "element", "element": "label", "body": "API-ключ" },
+                      {
+                        "type": "component",
+                        "component": "InputText",
+                        "props": {
+                          "value": "{apiKey}",
+                          "onChange": "{(e) => { setApiKey(e.target.value); setDirty(true); }}",
+                          "placeholder": "sk-...",
+                          "style": "{({ width: '24rem' })}"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "_comment": "Action bar",
+        "type": "element",
+        "element": "div",
+        "className": "flex gap-2 mt-3",
+        "children": [
+          {
+            "type": "component",
+            "component": "Button",
+            "props": {
+              "label": "Сохранить",
+              "icon": "pi pi-check",
+              "onClick": "{handleSave}",
+              "disabled": "{!dirty}",
+              "size": "small"
+            }
+          },
+          {
+            "type": "component",
+            "component": "Button",
+            "props": {
+              "label": "Сбросить",
+              "icon": "pi pi-refresh",
+              "onClick": "{() => setConfirmVisible(true)}",
+              "className": "p-button-outlined p-button-danger",
+              "size": "small"
+            }
+          }
+        ]
+      },
+      {
+        "_comment": "Reset confirm dialog",
+        "type": "component",
+        "component": "Dialog",
+        "props": {
+          "header": "Сбросить настройки?",
+          "visible": "{confirmVisible}",
+          "onHide": "{() => setConfirmVisible(false)}",
+          "style": "{({ width: '24rem' })}",
+          "footer": "{(<div className='flex gap-2 justify-content-end'><Button label='Отмена' className='p-button-outlined' onClick={() => setConfirmVisible(false)} /><Button label='Сбросить' className='p-button-danger' onClick={handleReset} /></div>)}"
+        },
+        "children": [
+          {
+            "type": "element",
+            "element": "p",
+            "body": "Все настройки будут возвращены к значениям по умолчанию. Продолжить?"
+          }
+        ]
+      }
+    ]
+  }
+}
