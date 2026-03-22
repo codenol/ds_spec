@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ds_spec Renderer
+ * ds_spec Renderer v2
  * Читает page-spec.json → генерирует .tsx файлы
  *
  * Usage:
@@ -56,28 +56,47 @@ console.log(`✅ Written: ${outFile}`);
 // ─── Renderer ─────────────────────────────────────────────────────────────────
 
 function renderPage(spec) {
-  const imports = spec.imports.join('\n');
+  // Determine which React hooks are actually used
+  const usedHooks = {
+    useState:    (spec.state     || []).length > 0,
+    useRef:      (spec.refs      || []).length > 0,
+    useMemo:     (spec.derived   || []).length > 0,
+    useCallback: (spec.callbacks || []).length > 0,
+    useEffect:   (spec.effects   || []).length > 0,
+  };
 
-  const stateLines = (spec.state || []).map(s =>
-    `  const [${s.name}, ${s.setter || `set${capitalize(s.name)}`}] = useState<${s.type}>(${s.initial});`
-  ).join('\n');
+  const imports = patchReactImport(spec.imports, usedHooks);
+
+  const stateLines = (spec.state || []).map(s => {
+    const setter = s.setter || `set${capitalize(s.name)}`;
+    return `  const [${s.name}, ${setter}] = useState<${s.type}>(${s.initial});`;
+  });
 
   const refLines = (spec.refs || []).map(r =>
     `  const ${r.name} = useRef<${r.type}>(null);`
-  ).join('\n');
+  );
+
+  const callbackLines = (spec.callbacks || []).map(cb => {
+    const params = cb.params || '';
+    return (
+      `  const ${cb.name} = useCallback((${params}) => {\n` +
+      `    ${cb.body}\n` +
+      `  }, [${cb.deps.join(', ')}]);`
+    );
+  });
 
   const derivedLines = (spec.derived || []).map(d =>
-    `  const ${d.name} = useMemo(() => ${d.logic}, [${d.deps.join(', ')}]);`
-  ).join('\n');
+    `  const ${d.name} = useMemo(\n    () => ${d.logic},\n    [${d.deps.join(', ')}],\n  );`
+  );
 
   const effectLines = (spec.effects || []).map(e => {
     const cleanup = e.cleanup ? `\n    return () => { ${e.cleanup} };` : '';
-    return `  useEffect(() => {\n    ${e.body}${cleanup}\n  }, [${e.deps.join(', ')}]);`;
-  }).join('\n');
-
-  const callbackLines = (spec.callbacks || []).map(c =>
-    `  const ${c.name} = useCallback((${c.params || ''}) => {\n    ${c.body}\n  }, [${c.deps.join(', ')}]);`
-  ).join('\n');
+    return (
+      `  useEffect(() => {\n` +
+      `    ${e.body}${cleanup}\n` +
+      `  }, [${e.deps.join(', ')}]);`
+    );
+  });
 
   const dataLines = Object.entries(spec.data || {}).map(([key, val]) =>
     `const ${key} = ${JSON.stringify(val, null, 2)};`
@@ -86,59 +105,130 @@ function renderPage(spec) {
   const componentName = capitalize(spec.page.id);
   const jsx = renderNode(spec.tree, 2);
 
-  return `${imports}
+  // Assemble component body — skip empty sections
+  const bodyBlocks = [
+    stateLines.join('\n'),
+    refLines.join('\n'),
+    callbackLines.join('\n\n'),
+    derivedLines.join('\n'),
+    effectLines.join('\n\n'),
+  ].filter(Boolean);
 
-${dataLines}
+  const body = bodyBlocks.length ? bodyBlocks.join('\n\n') + '\n' : '';
 
-const ${componentName}: React.FC = () => {
-${stateLines}
-${refLines}
-${derivedLines}
-${effectLines}
-${callbackLines}
+  const code = [
+    imports,
+    '',
+    dataLines,
+    '',
+    `const ${componentName}: React.FC = () => {`,
+    body,
+    `  return (`,
+    jsx,
+    `  );`,
+    `};`,
+    '',
+    `export default ${componentName};`,
+    '',
+  ].join('\n');
 
-  return (
-${jsx}
-  );
-};
-
-export default ${componentName};
-`;
+  // Collapse 3+ consecutive blank lines → 2
+  return code.replace(/\n{3,}/g, '\n\n');
 }
+
+// ─── Import patching ──────────────────────────────────────────────────────────
+
+/**
+ * Rewrites the `import React, { ... } from 'react'` line to include
+ * exactly the hooks that are needed — no more, no less.
+ */
+function patchReactImport(importLines, usedHooks) {
+  const needed = Object.entries(usedHooks)
+    .filter(([, v]) => v)
+    .map(([k]) => k)
+    .sort();
+
+  return importLines.map(line => {
+    if (!/from ['"]react['"]/.test(line)) return line;
+
+    if (needed.length === 0) return `import React from 'react';`;
+    return `import React, { ${needed.join(', ')} } from 'react';`;
+  }).join('\n');
+}
+
+// ─── Node rendering ───────────────────────────────────────────────────────────
 
 function renderNode(node, indent) {
   const pad = ' '.repeat(indent);
 
+  // Plain text expression node: {value}
   if (node.type === 'text') {
     return `${pad}{${node.text}}`;
   }
 
+  // Fragment <>...</>
   if (node.type === 'fragment') {
-    const children = (node.children || []).map(c => renderNode(c, indent + 2)).join('\n');
+    const children = visibleChildren(node).map(c => renderNode(c, indent + 2)).join('\n');
     return `${pad}<>\n${children}\n${pad}</>`;
   }
 
+  // Conditional: {cond && (<elem>)}
   if (node.type === 'conditional') {
-    const inner = renderNode({ ...node, type: node.children ? 'element' : 'component', condition: undefined }, indent + 2);
+    const inner = renderNode(
+      { ...node, type: node.component ? 'component' : 'element', condition: undefined },
+      indent + 2,
+    );
     return `${pad}{${node.condition} && (\n${inner}\n${pad})}`;
   }
 
+  // List: arr.map(item => (<elem key={item.id} .../>))
   if (node.type === 'list') {
-    const inner = renderNode({ ...node, type: 'component', iterateOver: undefined, itemVar: undefined, keyField: undefined }, indent + 4);
-    return `${pad}{${node.iterateOver}.map((${node.itemVar || 'item'}) => (\n${inner.replace('>', ` key={${node.itemVar || 'item'}.${node.keyField || 'id'}}>`)} \n${pad}))}`;
+    const itemVar  = node.itemVar  || 'item';
+    const keyField = node.keyField || 'id';
+    const innerNode = { ...node, type: node.component ? 'component' : 'element', iterateOver: undefined, itemVar: undefined, keyField: undefined };
+    const inner = renderNode(innerNode, indent + 4);
+    const keyed = injectKeyProp(inner, `${itemVar}.${keyField}`);
+    return `${pad}{${node.iterateOver}.map((${itemVar}) => (\n${keyed}\n${pad}))}`;
   }
 
-  const tag    = node.component || node.element || 'div';
-  const props  = buildProps(node);
-  const hasChildren = node.children && node.children.length > 0;
+  // Regular element or component
+  const tag   = node.component || node.element || 'div';
+  const props = buildProps(node);
 
-  if (!hasChildren) {
+  // Inline body text: <Tag props>body text</Tag>
+  if (node.body) {
+    return `${pad}<${tag}${props}>${node.body}</${tag}>`;
+  }
+
+  const kids = visibleChildren(node);
+
+  if (kids.length === 0) {
     return `${pad}<${tag}${props} />`;
   }
 
-  const children = node.children.map(c => renderNode(c, indent + 2)).join('\n');
-  return `${pad}<${tag}${props}>\n${children}\n${pad}</${tag}>`;
+  const childrenStr = kids.map(c => renderNode(c, indent + 2)).join('\n');
+  return `${pad}<${tag}${props}>\n${childrenStr}\n${pad}</${tag}>`;
 }
+
+/** Filter out comment-only nodes (nodes whose only key is _comment) */
+function visibleChildren(node) {
+  return (node.children || []).filter(c => {
+    const keys = Object.keys(c).filter(k => k !== '_comment');
+    return keys.length > 0;
+  });
+}
+
+/** Inject key={expr} into the first JSX tag of a rendered string */
+function injectKeyProp(rendered, keyExpr) {
+  // Match `  <TagName` followed by a space or `>`
+  return rendered.replace(/^(\s*<[A-Za-z][\w.]*)([ >\/])/, (_, open, after) => {
+    if (after === '>') return `${open} key={${keyExpr}}>`;
+    if (after === '/') return `${open} key={${keyExpr}} /`; // self-closing edge case
+    return `${open} key={${keyExpr}}${after}`;
+  });
+}
+
+// ─── Props builder ────────────────────────────────────────────────────────────
 
 function buildProps(node) {
   const parts = [];
@@ -146,17 +236,21 @@ function buildProps(node) {
   if (node.className) parts.push(`className="${node.className}"`);
 
   if (node.style && Object.keys(node.style).length) {
-    const styleStr = JSON.stringify(node.style);
-    parts.push(`style={${styleStr}}`);
+    parts.push(`style={${JSON.stringify(node.style)}}`);
   }
 
   for (const [k, v] of Object.entries(node.props || {})) {
+    if (k === '_comment') continue;
     if (typeof v === 'string' && v.startsWith('{')) {
+      // Already a JSX expression, e.g. "{value}" or "{() => foo()}"
       parts.push(`${k}=${v}`);
     } else if (typeof v === 'boolean') {
-      if (v) parts.push(k);
+      if (v) parts.push(k); // boolean true → shorthand prop
     } else if (typeof v === 'number') {
       parts.push(`${k}={${v}}`);
+    } else if (typeof v === 'object' && v !== null) {
+      // Inline object → JSX expression, e.g. style={{ width: '12rem' }}
+      parts.push(`${k}={${JSON.stringify(v)}}`);
     } else {
       parts.push(`${k}="${v}"`);
     }

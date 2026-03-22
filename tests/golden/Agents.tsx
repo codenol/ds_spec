@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
@@ -80,16 +80,19 @@ const Agents: React.FC = () => {
   const [agents, setAgents] = useState<AgentRow[]>(MOCK_AGENTS);
   const [selection, setSelection] = useState<AgentRow[]>([]);
   const [menuRow, setMenuRow] = useState<AgentRow | null>(null);
+
   const rowMenuRef = useRef<Menu>(null);
-  const filteredAgents = useMemo(() => agents.filter(a => (!searchQuery || a.name.toLowerCase().includes(searchQuery.toLowerCase())) && (!statusFilter || a.statusCode === statusFilter)), [agents, searchQuery, statusFilter]);
 
-
+  const filteredAgents = useMemo(
+    () => agents.filter(a => (!searchQuery || a.name.toLowerCase().includes(searchQuery.toLowerCase())) && (!statusFilter || a.statusCode === statusFilter)),
+    [agents, searchQuery, statusFilter],
+  );
 
   return (
   <AppLayout breadcrumbTrail={[{ label: 'Агенты' }]}>
     <div className="flex flex-wrap align-items-center gap-2 mb-3">
       <InputText placeholder="Поиск по имени" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="p-inputtext-sm" />
-      <Dropdown value={statusFilter} options={STATUS_OPTIONS} onChange={(e) => setStatusFilter(e.value)} optionLabel="label" placeholder="Статус" className="p-inputtext-sm" style="[object Object]" />
+      <Dropdown value={statusFilter} options={STATUS_OPTIONS} onChange={(e) => setStatusFilter(e.value)} optionLabel="label" placeholder="Статус" className="p-inputtext-sm" style={{"width":"12rem"}} />
       <Button label="Добавить агента" className="p-button-pr" size="small" />
       <Button label="Экспорт" className="p-button-outlined" size="small" icon="pi pi-download" />
       <Button icon="pi pi-cog" className="p-button-rounded p-button-outlined" size="small" aria-label="Настройки таблицы" />
