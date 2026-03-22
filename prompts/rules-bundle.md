@@ -3,9 +3,47 @@
 Автогенерируется скриптом `scripts/build-rules-bundle.js`.
 Вставляй этот файл целиком в LLM-промпт.
 
-Компонентов покрыто: 25
+Компонентов покрыто: 36
 
 ---
+
+## accordion.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Accordion/Accordion",
+      "component": "Accordion",
+      "importPath": "primereact/accordion",
+      "props": {
+        "activeIndex": { "mapTo": "activeIndex", "bindState": true, "optional": true },
+        "onTabChange": { "mapTo": "onTabChange", "optional": true },
+        "multiple":    { "mapTo": "multiple",    "optional": true }
+      },
+      "variants": {
+        "Multiple=true": { "multiple": true }
+      },
+      "childSlots": { "default": "children" }
+    },
+    {
+      "figmaName": "Accordion/AccordionTab",
+      "component": "AccordionTab",
+      "importPath": "primereact/accordion",
+      "props": {
+        "header":   { "mapTo": "header" },
+        "disabled": { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Disabled=true": { "disabled": true }
+      },
+      "childSlots": { "default": "children" }
+    }
+  ]
+}
+
+```
 
 ## button.rules.json
 
@@ -33,6 +71,48 @@
         "Size=large": { "size": null },
         "Size=small": { "size": "small" }
       }
+    }
+  ]
+}
+
+```
+
+## checkbox.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Checkbox/Checkbox",
+      "component": "Checkbox",
+      "importPath": "primereact/checkbox",
+      "props": {
+        "checked":   { "mapTo": "checked",   "bindState": true },
+        "onChange":  { "mapTo": "onChange",  "optional": true },
+        "disabled":  { "mapTo": "disabled",  "optional": true },
+        "inputId":   { "mapTo": "inputId",   "optional": true }
+      },
+      "variants": {
+        "State=checked":        { "checked": true },
+        "State=unchecked":      { "checked": false },
+        "State=indeterminate":  { "checked": false },
+        "Disabled=true":        { "disabled": true }
+      }
+    },
+    {
+      "figmaName": "Checkbox/CheckboxLabel",
+      "_comment": "Обёртка Checkbox + label в одной строке",
+      "element": "div",
+      "className": "flex align-items-center gap-2",
+      "childSlots": { "default": "children" }
+    },
+    {
+      "figmaName": "Checkbox/CheckboxGroup",
+      "_comment": "Вертикальный список Checkbox с общим заголовком",
+      "element": "div",
+      "className": "flex flex-column gap-2",
+      "childSlots": { "default": "children" }
     }
   ]
 }
@@ -490,6 +570,50 @@
 
 ```
 
+## stepper.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Stepper/StepWizard",
+      "_comment": "Пошаговый wizard. В uikit реализован как кастомный компонент поверх Steps + контент",
+      "component": "Steps",
+      "importPath": "primereact/steps",
+      "props": {
+        "model":        { "mapTo": "model" },
+        "activeIndex":  { "mapTo": "activeIndex",  "bindState": true },
+        "onSelect":     { "mapTo": "onSelect",     "optional": true },
+        "readOnly":     { "mapTo": "readOnly",     "optional": true }
+      },
+      "variants": {
+        "ReadOnly=true":  { "readOnly": true },
+        "ReadOnly=false": { "readOnly": false }
+      },
+      "staticProps": {
+        "readOnly": false
+      }
+    },
+    {
+      "figmaName": "Stepper/StepContent",
+      "_comment": "Контентная область одного шага wizard — обёрточный div",
+      "element": "div",
+      "className": "flex flex-column gap-3 p-3",
+      "childSlots": { "default": "children" }
+    },
+    {
+      "figmaName": "Stepper/StepActions",
+      "_comment": "Кнопки Назад / Далее внизу шага",
+      "element": "div",
+      "className": "flex justify-content-between mt-3",
+      "childSlots": { "default": "children" }
+    }
+  ]
+}
+
+```
+
 ## tabs.rules.json
 
 ```json
@@ -525,6 +649,78 @@
       "staticProps": {},
       "childSlots": {
         "default": "children"
+      }
+    }
+  ]
+}
+
+```
+
+## tooltip.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Tooltip/Tooltip",
+      "_comment": "PrimeReact Tooltip — навешивается через data-pr-tooltip + <Tooltip target> или через className target",
+      "component": "Tooltip",
+      "importPath": "primereact/tooltip",
+      "props": {
+        "target":    { "mapTo": "target" },
+        "content":   { "mapTo": "content", "optional": true }
+      },
+      "variants": {
+        "Position=top":    { "position": "top" },
+        "Position=bottom": { "position": "bottom" },
+        "Position=left":   { "position": "left" },
+        "Position=right":  { "position": "right" }
+      },
+      "staticProps": {
+        "position": "top"
+      }
+    },
+    {
+      "figmaName": "Tooltip/Toggletip",
+      "_comment": "Toggletip = OverlayPanel с кнопкой-триггером",
+      "component": "OverlayPanel",
+      "importPath": "primereact/overlaypanel",
+      "props": {
+        "content": { "mapTo": "children", "optional": true }
+      },
+      "variants": {}
+    }
+  ]
+}
+
+```
+
+## tree.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Tree/Tree",
+      "component": "Tree",
+      "importPath": "primereact/tree",
+      "props": {
+        "value":              { "mapTo": "value" },
+        "selectionMode":      { "mapTo": "selectionMode",      "optional": true },
+        "selectionKeys":      { "mapTo": "selectionKeys",      "bindState": true, "optional": true },
+        "onSelectionChange":  { "mapTo": "onSelectionChange",  "optional": true },
+        "expandedKeys":       { "mapTo": "expandedKeys",       "bindState": true, "optional": true },
+        "onToggle":           { "mapTo": "onToggle",           "optional": true },
+        "filter":             { "mapTo": "filter",             "optional": true },
+        "filterPlaceholder":  { "mapTo": "filterPlaceholder",  "optional": true },
+        "nodeTemplate":       { "mapTo": "nodeTemplate",       "optional": true }
+      },
+      "variants": {
+        "Selectable=single":   { "selectionMode": "single" },
+        "Selectable=multiple": { "selectionMode": "multiple" },
+        "Filter=true":         { "filter": true }
       }
     }
   ]

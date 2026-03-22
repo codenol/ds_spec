@@ -1,0 +1,32 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Accordion/Accordion",
+      "component": "Accordion",
+      "importPath": "primereact/accordion",
+      "props": {
+        "activeIndex": { "mapTo": "activeIndex", "bindState": true, "optional": true },
+        "onTabChange": { "mapTo": "onTabChange", "optional": true },
+        "multiple":    { "mapTo": "multiple",    "optional": true }
+      },
+      "variants": {
+        "Multiple=true": { "multiple": true }
+      },
+      "childSlots": { "default": "children" }
+    },
+    {
+      "figmaName": "Accordion/AccordionTab",
+      "component": "AccordionTab",
+      "importPath": "primereact/accordion",
+      "props": {
+        "header":   { "mapTo": "header" },
+        "disabled": { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Disabled=true": { "disabled": true }
+      },
+      "childSlots": { "default": "children" }
+    }
+  ]
+}

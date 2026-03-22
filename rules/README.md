@@ -42,6 +42,14 @@
 | `layout.rules.json` | AppLayout, breadcrumbs, card |
 | `datatable.rules.json` | DataTable, Column, пагинация |
 | `dialog.rules.json` | Dialog, Drawer, DialogTabs |
+| `form.rules.json` | InputNumber, Calendar, MultiSelect, Chips |
+| `menu.rules.json` | Menu, ContextMenu, TieredMenu |
+| `tabs.rules.json` | TabView, TabPanel |
+| `checkbox.rules.json` | Checkbox, CheckboxLabel, CheckboxGroup |
+| `tooltip.rules.json` | Tooltip, Toggletip (OverlayPanel) |
+| `accordion.rules.json` | Accordion, AccordionTab |
+| `tree.rules.json` | Tree |
+| `stepper.rules.json` | StepWizard (Steps), StepContent, StepActions |
 
 ## Как добавить новый компонент
 

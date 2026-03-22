@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Tree/Tree",
+      "component": "Tree",
+      "importPath": "primereact/tree",
+      "props": {
+        "value":              { "mapTo": "value" },
+        "selectionMode":      { "mapTo": "selectionMode",      "optional": true },
+        "selectionKeys":      { "mapTo": "selectionKeys",      "bindState": true, "optional": true },
+        "onSelectionChange":  { "mapTo": "onSelectionChange",  "optional": true },
+        "expandedKeys":       { "mapTo": "expandedKeys",       "bindState": true, "optional": true },
+        "onToggle":           { "mapTo": "onToggle",           "optional": true },
+        "filter":             { "mapTo": "filter",             "optional": true },
+        "filterPlaceholder":  { "mapTo": "filterPlaceholder",  "optional": true },
+        "nodeTemplate":       { "mapTo": "nodeTemplate",       "optional": true }
+      },
+      "variants": {
+        "Selectable=single":   { "selectionMode": "single" },
+        "Selectable=multiple": { "selectionMode": "multiple" },
+        "Filter=true":         { "filter": true }
+      }
+    }
+  ]
+}
