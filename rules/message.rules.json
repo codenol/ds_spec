@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Message/Inline",
+      "component": "InlineMessage",
+      "importPath": "primereact/inlinemessage",
+      "props": {
+        "text": { "mapTo": "text" }
+      },
+      "variants": {
+        "Severity=info":    { "severity": "info" },
+        "Severity=success": { "severity": "success" },
+        "Severity=warning": { "severity": "warn" },
+        "Severity=error":   { "severity": "error" },
+        "Size=small": { "className": "p-inline-message-sm" },
+        "Size=large": {}
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Message/Toast",
+      "component": "Toast",
+      "importPath": "primereact/toast",
+      "props": {},
+      "variants": {},
+      "staticProps": {},
+      "_comment": "Toast управляется через ref: toastRef.current.show({severity, summary, detail})"
+    }
+  ]
+}

@@ -7,6 +7,8 @@ on:
       - 'examples/**'
       - 'schema/**'
       - 'renderer/**'
+      - 'tests/**'
+      - 'scripts/**'
 
 jobs:
   validate:
@@ -30,6 +32,12 @@ jobs:
             echo "Validating $f..."
             node renderer/src/index.js --validate "$f"
           done
+
+      - name: Validate rules files
+        run: node renderer/src/validate-rules.js rules/
+
+      - name: E2E renderer test
+        run: node scripts/test-renderer.js
 
       - name: Rebuild rules-bundle
         run: node scripts/build-rules-bundle.js

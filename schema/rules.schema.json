@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ds-spec/rules.schema.json",
+  "title": "RulesFile",
+  "description": "Файл правил маппинга Figma-компонентов в React-компоненты",
+  "type": "object",
+  "required": ["version", "components"],
+  "properties": {
+    "version": { "type": "string", "const": "1" },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["figmaName"],
+        "properties": {
+          "figmaName":   { "type": "string", "description": "Точное имя компонента в Figma" },
+          "component":   { "type": "string", "description": "Имя React-компонента (если не HTML-элемент)" },
+          "element":     { "type": "string", "description": "HTML-тег (если не React-компонент)" },
+          "importPath":  { "type": "string", "description": "Путь импорта React-компонента" },
+          "className":   { "type": "string", "description": "CSS-классы для element-типа" },
+          "_comment":    { "type": "string" },
+          "props": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "mapTo":        { "type": "string" },
+                "optional":     { "type": "boolean" },
+                "bindState":    { "type": "boolean" },
+                "bindCallback": { "type": "boolean" },
+                "default":      {},
+                "type":         { "type": "string" }
+              }
+            }
+          },
+          "variants": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "staticProps": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "childSlots": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "severityMapping": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        },
+        "oneOf": [
+          { "required": ["component", "importPath"] },
+          { "required": ["element"] }
+        ]
+      }
+    }
+  }
+}

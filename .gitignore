@@ -1,0 +1,4 @@
+node_modules/
+renderer/node_modules/
+renderer/package-lock.json
+tests/.tmp/
