@@ -70,6 +70,15 @@ function renderPage(spec) {
     `  const ${d.name} = useMemo(() => ${d.logic}, [${d.deps.join(', ')}]);`
   ).join('\n');
 
+  const effectLines = (spec.effects || []).map(e => {
+    const cleanup = e.cleanup ? `\n    return () => { ${e.cleanup} };` : '';
+    return `  useEffect(() => {\n    ${e.body}${cleanup}\n  }, [${e.deps.join(', ')}]);`;
+  }).join('\n');
+
+  const callbackLines = (spec.callbacks || []).map(c =>
+    `  const ${c.name} = useCallback((${c.params || ''}) => {\n    ${c.body}\n  }, [${c.deps.join(', ')}]);`
+  ).join('\n');
+
   const dataLines = Object.entries(spec.data || {}).map(([key, val]) =>
     `const ${key} = ${JSON.stringify(val, null, 2)};`
   ).join('\n\n');
@@ -85,6 +94,8 @@ const ${componentName}: React.FC = () => {
 ${stateLines}
 ${refLines}
 ${derivedLines}
+${effectLines}
+${callbackLines}
 
   return (
 ${jsx}

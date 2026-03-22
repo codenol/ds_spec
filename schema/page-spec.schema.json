@@ -72,6 +72,35 @@
       "description": "Корневой узел дерева компонентов"
     },
 
+    "effects": {
+      "type": "array",
+      "description": "useEffect-хуки",
+      "items": {
+        "type": "object",
+        "required": ["deps", "body"],
+        "properties": {
+          "deps":    { "type": "array", "items": { "type": "string" }, "description": "Массив зависимостей" },
+          "body":    { "type": "string", "description": "Тело эффекта (JS-код)" },
+          "cleanup": { "type": "string", "description": "Код очистки (return () => {...})" }
+        }
+      }
+    },
+
+    "callbacks": {
+      "type": "array",
+      "description": "useCallback-функции",
+      "items": {
+        "type": "object",
+        "required": ["name", "deps", "body"],
+        "properties": {
+          "name":   { "type": "string" },
+          "params": { "type": "string", "description": "Параметры функции, например 'row, col'", "default": "" },
+          "deps":   { "type": "array", "items": { "type": "string" } },
+          "body":   { "type": "string" }
+        }
+      }
+    },
+
     "data": {
       "type": "object",
       "description": "Статические данные: options-массивы, константы и т.д.",

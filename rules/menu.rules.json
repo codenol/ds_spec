@@ -1,0 +1,42 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Menu/Menu",
+      "component": "Menu",
+      "importPath": "primereact/menu",
+      "props": {
+        "model": { "mapTo": "model", "bindState": true }
+      },
+      "variants": {
+        "Popup=true": { "popup": true },
+        "Popup=false": {}
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Menu/ContextMenu",
+      "component": "ContextMenu",
+      "importPath": "primereact/contextmenu",
+      "props": {
+        "model": { "mapTo": "model", "bindState": true }
+      },
+      "variants": {},
+      "staticProps": {},
+      "_comment": "Управляется через ref: menuRef.current.show(event)"
+    },
+    {
+      "figmaName": "Menu/TieredMenu",
+      "component": "TieredMenu",
+      "importPath": "primereact/tieredmenu",
+      "props": {
+        "model": { "mapTo": "model", "bindState": true }
+      },
+      "variants": {
+        "Popup=true": { "popup": true },
+        "Popup=false": {}
+      },
+      "staticProps": {}
+    }
+  ]
+}
