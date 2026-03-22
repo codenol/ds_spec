@@ -1,0 +1,78 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Input/Number",
+      "component": "InputNumber",
+      "importPath": "primereact/inputnumber",
+      "props": {
+        "value":       { "mapTo": "value", "bindState": true },
+        "placeholder": { "mapTo": "placeholder", "optional": true },
+        "min":         { "mapTo": "min", "optional": true },
+        "max":         { "mapTo": "max", "optional": true },
+        "step":        { "mapTo": "step", "optional": true },
+        "disabled":    { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Mode=decimal":  { "mode": "decimal" },
+        "Mode=currency": { "mode": "currency", "currency": "RUB" },
+        "Size=small":    { "className": "p-inputtext-sm" },
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Input/Calendar",
+      "component": "Calendar",
+      "importPath": "primereact/calendar",
+      "props": {
+        "value":       { "mapTo": "value", "bindState": true },
+        "placeholder": { "mapTo": "placeholder", "optional": true },
+        "disabled":    { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Selection=single":   { "selectionMode": "single" },
+        "Selection=range":    { "selectionMode": "range" },
+        "Selection=multiple": { "selectionMode": "multiple" },
+        "View=month":  { "view": "month", "dateFormat": "mm/yy" },
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {
+        "showIcon": true,
+        "dateFormat": "dd.mm.yy"
+      }
+    },
+    {
+      "figmaName": "Input/MultiSelect",
+      "component": "MultiSelect",
+      "importPath": "primereact/multiselect",
+      "props": {
+        "value":        { "mapTo": "value", "bindState": true },
+        "options":      { "mapTo": "options", "bindState": true },
+        "optionLabel":  { "mapTo": "optionLabel", "default": "label" },
+        "placeholder":  { "mapTo": "placeholder", "optional": true },
+        "disabled":     { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Display=chip":  { "display": "chip" },
+        "Display=comma": { "display": "comma" },
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Input/Chips",
+      "component": "Chips",
+      "importPath": "primereact/chips",
+      "props": {
+        "value":       { "mapTo": "value", "bindState": true },
+        "placeholder": { "mapTo": "placeholder", "optional": true },
+        "disabled":    { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {}
+    }
+  ]
+}

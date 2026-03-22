@@ -3,7 +3,7 @@
 Автогенерируется скриптом `scripts/build-rules-bundle.js`.
 Вставляй этот файл целиком в LLM-промпт.
 
-Компонентов покрыто: 16
+Компонентов покрыто: 25
 
 ---
 
@@ -169,6 +169,90 @@
 
 ```
 
+## form.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Input/Number",
+      "component": "InputNumber",
+      "importPath": "primereact/inputnumber",
+      "props": {
+        "value":       { "mapTo": "value", "bindState": true },
+        "placeholder": { "mapTo": "placeholder", "optional": true },
+        "min":         { "mapTo": "min", "optional": true },
+        "max":         { "mapTo": "max", "optional": true },
+        "step":        { "mapTo": "step", "optional": true },
+        "disabled":    { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Mode=decimal":  { "mode": "decimal" },
+        "Mode=currency": { "mode": "currency", "currency": "RUB" },
+        "Size=small":    { "className": "p-inputtext-sm" },
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Input/Calendar",
+      "component": "Calendar",
+      "importPath": "primereact/calendar",
+      "props": {
+        "value":       { "mapTo": "value", "bindState": true },
+        "placeholder": { "mapTo": "placeholder", "optional": true },
+        "disabled":    { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Selection=single":   { "selectionMode": "single" },
+        "Selection=range":    { "selectionMode": "range" },
+        "Selection=multiple": { "selectionMode": "multiple" },
+        "View=month":  { "view": "month", "dateFormat": "mm/yy" },
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {
+        "showIcon": true,
+        "dateFormat": "dd.mm.yy"
+      }
+    },
+    {
+      "figmaName": "Input/MultiSelect",
+      "component": "MultiSelect",
+      "importPath": "primereact/multiselect",
+      "props": {
+        "value":        { "mapTo": "value", "bindState": true },
+        "options":      { "mapTo": "options", "bindState": true },
+        "optionLabel":  { "mapTo": "optionLabel", "default": "label" },
+        "placeholder":  { "mapTo": "placeholder", "optional": true },
+        "disabled":     { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "Display=chip":  { "display": "chip" },
+        "Display=comma": { "display": "comma" },
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Input/Chips",
+      "component": "Chips",
+      "importPath": "primereact/chips",
+      "props": {
+        "value":       { "mapTo": "value", "bindState": true },
+        "placeholder": { "mapTo": "placeholder", "optional": true },
+        "disabled":    { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {}
+    }
+  ]
+}
+
+```
+
 ## input.rules.json
 
 ```json
@@ -284,6 +368,54 @@
 
 ```
 
+## menu.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Menu/Menu",
+      "component": "Menu",
+      "importPath": "primereact/menu",
+      "props": {
+        "model": { "mapTo": "model", "bindState": true }
+      },
+      "variants": {
+        "Popup=true": { "popup": true },
+        "Popup=false": {}
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Menu/ContextMenu",
+      "component": "ContextMenu",
+      "importPath": "primereact/contextmenu",
+      "props": {
+        "model": { "mapTo": "model", "bindState": true }
+      },
+      "variants": {},
+      "staticProps": {},
+      "_comment": "Управляется через ref: menuRef.current.show(event)"
+    },
+    {
+      "figmaName": "Menu/TieredMenu",
+      "component": "TieredMenu",
+      "importPath": "primereact/tieredmenu",
+      "props": {
+        "model": { "mapTo": "model", "bindState": true }
+      },
+      "variants": {
+        "Popup=true": { "popup": true },
+        "Popup=false": {}
+      },
+      "staticProps": {}
+    }
+  ]
+}
+
+```
+
 ## message.rules.json
 
 ```json
@@ -351,6 +483,48 @@
         "stop":        "stop",
         "new":         "new",
         "load":        "load"
+      }
+    }
+  ]
+}
+
+```
+
+## tabs.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Tabs/TabView",
+      "component": "TabView",
+      "importPath": "primereact/tabview",
+      "props": {
+        "activeIndex": { "mapTo": "activeIndex", "bindState": true, "optional": true }
+      },
+      "variants": {
+        "Scrollable=true": { "scrollable": true }
+      },
+      "staticProps": {},
+      "childSlots": {
+        "default": "children"
+      }
+    },
+    {
+      "figmaName": "Tabs/TabPanel",
+      "component": "TabPanel",
+      "importPath": "primereact/tabview",
+      "props": {
+        "header": { "mapTo": "header" },
+        "disabled": { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {},
+      "childSlots": {
+        "default": "children"
       }
     }
   ]

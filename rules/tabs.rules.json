@@ -1,0 +1,36 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Tabs/TabView",
+      "component": "TabView",
+      "importPath": "primereact/tabview",
+      "props": {
+        "activeIndex": { "mapTo": "activeIndex", "bindState": true, "optional": true }
+      },
+      "variants": {
+        "Scrollable=true": { "scrollable": true }
+      },
+      "staticProps": {},
+      "childSlots": {
+        "default": "children"
+      }
+    },
+    {
+      "figmaName": "Tabs/TabPanel",
+      "component": "TabPanel",
+      "importPath": "primereact/tabview",
+      "props": {
+        "header": { "mapTo": "header" },
+        "disabled": { "mapTo": "disabled", "optional": true }
+      },
+      "variants": {
+        "State=disabled": { "disabled": true }
+      },
+      "staticProps": {},
+      "childSlots": {
+        "default": "children"
+      }
+    }
+  ]
+}
