@@ -1,0 +1,36 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Checkbox/Checkbox",
+      "component": "Checkbox",
+      "importPath": "primereact/checkbox",
+      "props": {
+        "checked":   { "mapTo": "checked",   "bindState": true },
+        "onChange":  { "mapTo": "onChange",  "optional": true },
+        "disabled":  { "mapTo": "disabled",  "optional": true },
+        "inputId":   { "mapTo": "inputId",   "optional": true }
+      },
+      "variants": {
+        "State=checked":        { "checked": true },
+        "State=unchecked":      { "checked": false },
+        "State=indeterminate":  { "checked": false },
+        "Disabled=true":        { "disabled": true }
+      }
+    },
+    {
+      "figmaName": "Checkbox/CheckboxLabel",
+      "_comment": "Обёртка Checkbox + label в одной строке",
+      "element": "div",
+      "className": "flex align-items-center gap-2",
+      "childSlots": { "default": "children" }
+    },
+    {
+      "figmaName": "Checkbox/CheckboxGroup",
+      "_comment": "Вертикальный список Checkbox с общим заголовком",
+      "element": "div",
+      "className": "flex flex-column gap-2",
+      "childSlots": { "default": "children" }
+    }
+  ]
+}

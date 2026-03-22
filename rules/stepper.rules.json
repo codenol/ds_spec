@@ -1,0 +1,38 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Stepper/StepWizard",
+      "_comment": "Пошаговый wizard. В uikit реализован как кастомный компонент поверх Steps + контент",
+      "component": "Steps",
+      "importPath": "primereact/steps",
+      "props": {
+        "model":        { "mapTo": "model" },
+        "activeIndex":  { "mapTo": "activeIndex",  "bindState": true },
+        "onSelect":     { "mapTo": "onSelect",     "optional": true },
+        "readOnly":     { "mapTo": "readOnly",     "optional": true }
+      },
+      "variants": {
+        "ReadOnly=true":  { "readOnly": true },
+        "ReadOnly=false": { "readOnly": false }
+      },
+      "staticProps": {
+        "readOnly": false
+      }
+    },
+    {
+      "figmaName": "Stepper/StepContent",
+      "_comment": "Контентная область одного шага wizard — обёрточный div",
+      "element": "div",
+      "className": "flex flex-column gap-3 p-3",
+      "childSlots": { "default": "children" }
+    },
+    {
+      "figmaName": "Stepper/StepActions",
+      "_comment": "Кнопки Назад / Далее внизу шага",
+      "element": "div",
+      "className": "flex justify-content-between mt-3",
+      "childSlots": { "default": "children" }
+    }
+  ]
+}

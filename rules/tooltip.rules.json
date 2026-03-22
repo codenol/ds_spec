@@ -1,0 +1,34 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Tooltip/Tooltip",
+      "_comment": "PrimeReact Tooltip — навешивается через data-pr-tooltip + <Tooltip target> или через className target",
+      "component": "Tooltip",
+      "importPath": "primereact/tooltip",
+      "props": {
+        "target":    { "mapTo": "target" },
+        "content":   { "mapTo": "content", "optional": true }
+      },
+      "variants": {
+        "Position=top":    { "position": "top" },
+        "Position=bottom": { "position": "bottom" },
+        "Position=left":   { "position": "left" },
+        "Position=right":  { "position": "right" }
+      },
+      "staticProps": {
+        "position": "top"
+      }
+    },
+    {
+      "figmaName": "Tooltip/Toggletip",
+      "_comment": "Toggletip = OverlayPanel с кнопкой-триггером",
+      "component": "OverlayPanel",
+      "importPath": "primereact/overlaypanel",
+      "props": {
+        "content": { "mapTo": "children", "optional": true }
+      },
+      "variants": {}
+    }
+  ]
+}
