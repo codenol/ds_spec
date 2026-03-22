@@ -3,7 +3,7 @@
 Автогенерируется скриптом `scripts/build-rules-bundle.js`.
 Вставляй этот файл целиком в LLM-промпт.
 
-Компонентов покрыто: 11
+Компонентов покрыто: 16
 
 ---
 
@@ -81,6 +81,88 @@
           "bodyTemplate": "<Button icon='pi pi-ellipsis-v' className='p-button-text p-button-rounded' onClick={(e) => { setMenuRow(row); rowMenuRef.current?.toggle(e); }} />"
         }
       }
+    }
+  ]
+}
+
+```
+
+## dialog.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Dialog/Default",
+      "component": "Dialog",
+      "importPath": "primereact/dialog",
+      "props": {
+        "header":   { "mapTo": "header" },
+        "visible":  { "mapTo": "visible", "bindState": true },
+        "onHide":   { "mapTo": "onHide", "bindCallback": true },
+        "footer":   { "mapTo": "footer", "optional": true }
+      },
+      "variants": {
+        "Width=small":  { "style": { "width": "400px" } },
+        "Width=medium": { "style": { "width": "600px" } },
+        "Width=large":  { "style": { "width": "900px" } },
+        "Closable=false": { "closable": false }
+      },
+      "staticProps": {
+        "modal": true,
+        "draggable": false,
+        "resizable": false
+      },
+      "childSlots": {
+        "default": "children"
+      }
+    },
+    {
+      "figmaName": "Dialog/Drawer",
+      "component": "Sidebar",
+      "importPath": "primereact/sidebar",
+      "props": {
+        "header":   { "mapTo": "header", "optional": true },
+        "visible":  { "mapTo": "visible", "bindState": true },
+        "onHide":   { "mapTo": "onHide", "bindCallback": true }
+      },
+      "variants": {
+        "Position=right":  { "position": "right" },
+        "Position=left":   { "position": "left" },
+        "Position=bottom": { "position": "bottom" },
+        "Width=narrow":  { "style": { "width": "400px" } },
+        "Width=wide":    { "style": { "width": "700px" } }
+      },
+      "staticProps": {
+        "modal": true
+      },
+      "childSlots": {
+        "default": "children"
+      }
+    },
+    {
+      "figmaName": "Dialog/Tabs",
+      "component": "Dialog",
+      "importPath": "primereact/dialog",
+      "props": {
+        "header":  { "mapTo": "header" },
+        "visible": { "mapTo": "visible", "bindState": true },
+        "onHide":  { "mapTo": "onHide", "bindCallback": true }
+      },
+      "variants": {
+        "Width=medium": { "style": { "width": "600px" } },
+        "Width=large":  { "style": { "width": "900px" } }
+      },
+      "staticProps": {
+        "modal": true,
+        "draggable": false,
+        "resizable": false
+      },
+      "childSlots": {
+        "default": "children"
+      },
+      "_comment": "Внутри children используй TabView/TabPanel из tabs.rules.json"
     }
   ]
 }
@@ -196,6 +278,43 @@
         "Gap=2": { "className": "flex flex-column gap-2" },
         "Gap=3": { "className": "flex flex-column gap-3" }
       }
+    }
+  ]
+}
+
+```
+
+## message.rules.json
+
+```json
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Message/Inline",
+      "component": "InlineMessage",
+      "importPath": "primereact/inlinemessage",
+      "props": {
+        "text": { "mapTo": "text" }
+      },
+      "variants": {
+        "Severity=info":    { "severity": "info" },
+        "Severity=success": { "severity": "success" },
+        "Severity=warning": { "severity": "warn" },
+        "Severity=error":   { "severity": "error" },
+        "Size=small": { "className": "p-inline-message-sm" },
+        "Size=large": {}
+      },
+      "staticProps": {}
+    },
+    {
+      "figmaName": "Message/Toast",
+      "component": "Toast",
+      "importPath": "primereact/toast",
+      "props": {},
+      "variants": {},
+      "staticProps": {},
+      "_comment": "Toast управляется через ref: toastRef.current.show({severity, summary, detail})"
     }
   ]
 }

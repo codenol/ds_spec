@@ -1,0 +1,76 @@
+{
+  "version": "1",
+  "components": [
+    {
+      "figmaName": "Dialog/Default",
+      "component": "Dialog",
+      "importPath": "primereact/dialog",
+      "props": {
+        "header":   { "mapTo": "header" },
+        "visible":  { "mapTo": "visible", "bindState": true },
+        "onHide":   { "mapTo": "onHide", "bindCallback": true },
+        "footer":   { "mapTo": "footer", "optional": true }
+      },
+      "variants": {
+        "Width=small":  { "style": { "width": "400px" } },
+        "Width=medium": { "style": { "width": "600px" } },
+        "Width=large":  { "style": { "width": "900px" } },
+        "Closable=false": { "closable": false }
+      },
+      "staticProps": {
+        "modal": true,
+        "draggable": false,
+        "resizable": false
+      },
+      "childSlots": {
+        "default": "children"
+      }
+    },
+    {
+      "figmaName": "Dialog/Drawer",
+      "component": "Sidebar",
+      "importPath": "primereact/sidebar",
+      "props": {
+        "header":   { "mapTo": "header", "optional": true },
+        "visible":  { "mapTo": "visible", "bindState": true },
+        "onHide":   { "mapTo": "onHide", "bindCallback": true }
+      },
+      "variants": {
+        "Position=right":  { "position": "right" },
+        "Position=left":   { "position": "left" },
+        "Position=bottom": { "position": "bottom" },
+        "Width=narrow":  { "style": { "width": "400px" } },
+        "Width=wide":    { "style": { "width": "700px" } }
+      },
+      "staticProps": {
+        "modal": true
+      },
+      "childSlots": {
+        "default": "children"
+      }
+    },
+    {
+      "figmaName": "Dialog/Tabs",
+      "component": "Dialog",
+      "importPath": "primereact/dialog",
+      "props": {
+        "header":  { "mapTo": "header" },
+        "visible": { "mapTo": "visible", "bindState": true },
+        "onHide":  { "mapTo": "onHide", "bindCallback": true }
+      },
+      "variants": {
+        "Width=medium": { "style": { "width": "600px" } },
+        "Width=large":  { "style": { "width": "900px" } }
+      },
+      "staticProps": {
+        "modal": true,
+        "draggable": false,
+        "resizable": false
+      },
+      "childSlots": {
+        "default": "children"
+      },
+      "_comment": "Внутри children используй TabView/TabPanel из tabs.rules.json"
+    }
+  ]
+}
