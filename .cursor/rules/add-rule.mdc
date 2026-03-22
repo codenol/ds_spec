@@ -1,0 +1,46 @@
+---
+description: Добавление нового правила для компонента дизайн-системы
+globs: rules/**
+alwaysApply: false
+---
+
+# Добавление правила для нового компонента
+
+Применяй когда пользователь хочет добавить поддержку нового компонента в pipeline.
+
+## Алгоритм
+
+### 1. Прочитай формат
+- `rules/README.md` — формат и примеры
+- Любой файл из `rules/` — для референса
+
+### 2. Создай файл `rules/<name>.rules.json`
+
+Обязательные поля:
+```json
+{
+  "version": "1",
+  "components": [{
+    "figmaName": "ComponentGroup/ComponentName",
+    "component": "ReactComponentName",
+    "importPath": "primereact/packagename",
+    "props": { "figmaProp": { "mapTo": "reactProp" } },
+    "variants": { "Variant=value": { "className": "p-class-name" } }
+  }]
+}
+```
+
+Для HTML-элементов вместо `component`/`importPath` используй `element` + `className`.
+
+### 3. Валидируй
+```bash
+node renderer/src/validate-rules.js rules/<name>.rules.json
+```
+
+### 4. Пересобери bundle
+```bash
+node scripts/build-rules-bundle.js
+```
+
+### 5. Обнови README
+Добавь строку в таблицу в `rules/README.md`.

@@ -1,0 +1,60 @@
+---
+description: Генерация страницы из Figma-макета в .tsx через page-spec pipeline
+globs:
+alwaysApply: false
+---
+
+# Генерация страницы: Figma → page-spec.json → .tsx
+
+Применяй эти инструкции когда пользователь просит сгенерировать страницу, компонент или экран по Figma-макету.
+
+## Контекст репозитория
+
+Этот репо реализует pipeline: **Figma → page-spec.json → renderer → .tsx**
+- Компоненты описаны в `rules/*.rules.json`
+- Все правила собраны в `prompts/rules-bundle.md`
+- Renderer: `node renderer/src/index.js`
+
+## Алгоритм
+
+### 1. Загрузи контекст
+Прочитай перед генерацией:
+- `prompts/rules-bundle.md` — список всех доступных компонентов и их пропов
+- `schema/page-spec.schema.json` — схема валидации
+- `prompts/system.md` — правила генерации
+
+### 2. Получи данные из Figma
+Если есть Figma MCP — вызови `get_design_context` для нужного node.
+Иначе — попроси пользователя вставить данные из Figma или описать экран.
+
+### 3. Сгенерируй page-spec.json
+
+**Обязательные правила:**
+- Только компоненты из `rules/` — никаких выдуманных
+- `importPath` — строго из правил, не придумывать
+- `className` — только из разрешённого списка в `prompts/system.md`
+- Если компонент не покрыт — добавить `_comment`, использовать ближайший аналог
+- `imports` содержит только то, что реально используется в `tree`
+
+### 4. Валидируй
+```bash
+node renderer/src/index.js --validate /tmp/spec.json
+```
+При ошибках — исправь spec и повтори. Не продолжай без зелёного ✅.
+
+### 5. Генерируй TSX
+```bash
+node renderer/src/index.js --input /tmp/spec.json --out <целевая папка>
+```
+
+### 6. Сохрани spec
+```bash
+cp /tmp/spec.json examples/<name>.json
+```
+
+## Итог для пользователя
+
+Покажи:
+- путь к `.tsx` файлу
+- список использованных компонентов
+- список `_comment` если есть непокрытые элементы (→ нужно добавить правило)
