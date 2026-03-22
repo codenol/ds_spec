@@ -83,6 +83,8 @@ const Agents: React.FC = () => {
   const rowMenuRef = useRef<Menu>(null);
   const filteredAgents = useMemo(() => agents.filter(a => (!searchQuery || a.name.toLowerCase().includes(searchQuery.toLowerCase())) && (!statusFilter || a.statusCode === statusFilter)), [agents, searchQuery, statusFilter]);
 
+
+
   return (
   <AppLayout breadcrumbTrail={[{ label: 'Агенты' }]}>
     <div className="flex flex-wrap align-items-center gap-2 mb-3">
